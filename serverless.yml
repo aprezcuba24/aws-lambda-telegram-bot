@@ -1,0 +1,41 @@
+service: base_aws_bot_bot
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: python3.8
+  stage: ${env:stage}
+  environment:
+    TELEGRAM_TOKEN: ${env:TELEGRAM_TOKEN}
+
+package:
+ patterns:
+  - '!./**'
+  - app/**
+
+custom:
+  pythonRequirements:
+    dockerizePip: non-linux
+
+plugins:
+  - serverless-python-requirements
+
+functions:
+  register_webhook:
+    handler: app/register_webhook.main
+    events:
+     - httpApi:
+         path: /register_webhook
+         method: get
+  error_testing:
+    handler: app/error_testing.main
+    events:
+     - httpApi:
+         path: /error_testing
+         method: get
+  webhook:
+    handler: app/webhook.main
+    events:
+     - httpApi:
+         path: /webhook
+         method: post

@@ -1,0 +1,25 @@
+image: python:3.8
+
+stages:
+  # - deploy
+  - master
+
+# dev:
+#   stage: deploy
+#   variables:
+#     stage: dev # the stage used to deploy with serverless framework
+#   script:
+#     - apt-get update && apt-get install --no-install-recommends -y nodejs npm
+#     - npm install
+#     - npm run deploy
+#   environment: dev
+
+prod:
+  stage: master
+  variables:
+    stage: prod # the stage used to deploy with serverless framework
+  script:
+    - apt-get update && apt-get install --no-install-recommends -y nodejs npm
+    - npm install
+    - npm run deploy
+  environment: prod

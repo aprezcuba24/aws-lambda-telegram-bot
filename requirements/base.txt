@@ -1,0 +1,6 @@
+pytz==2021.1  # https://github.com/stub42/pytz
+python-slugify==5.0.2  # https://github.com/un33k/python-slugify
+Pillow==8.2.0  # https://github.com/python-pillow/Pillow
+python-telegram-bot==13.11
+requests==2.27.1
+emoji==1.7.0

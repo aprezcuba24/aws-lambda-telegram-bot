@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  app: &app
+    user: vscode
+    build:
+      context: .
+      dockerfile: ./compose/local/app/Dockerfile
+    image: base_aws_bot_bot
+    container_name: base_aws_bot_bot
+    volumes:
+      - .:/app
+    env_file:
+      - ./.envs/.local/.app
+    command: sleep infinity
