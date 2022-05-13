@@ -37,4 +37,6 @@ RUN pip3 install --user pipenv
 RUN pip3 install --upgrade pip
 RUN pip3 install virtualenv
 
+RUN curl -sL https://deb.nodesource.com/setup_18.x | sudo -E bash - && sudo apt-get install -y nodejs
+
 WORKDIR /workspace

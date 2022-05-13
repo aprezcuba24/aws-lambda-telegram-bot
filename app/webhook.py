@@ -1,10 +1,12 @@
 import json
 import os
 from telegram import Update, Bot
+from telegram.ext import ContextTypes
 from queue import Queue
 from telegram.ext import Dispatcher, CommandHandler, CallbackQueryHandler
 
 from app.handlers.start import start_command, start_query
+from app.utils.callback_context import CallbackContext
 
 
 def main(event, context):
@@ -13,7 +15,7 @@ def main(event, context):
     print(event)
     data = json.loads(event["body"])
     update = Update.de_json(data, bot)
-    dispatcher = Dispatcher(bot=bot, update_queue=Queue())
+    dispatcher = Dispatcher(bot=bot, update_queue=Queue(), context_types=ContextTypes(context=CallbackContext))
     configure(dispatcher)
     dispatcher.process_update(update=update)
     return {
