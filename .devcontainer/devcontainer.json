@@ -1,6 +1,6 @@
 // If you want to run as a non-root user in the container, see .devcontainer/docker-compose.yml.
 {
-	"name": "fekenews_bot",
+	"name": "base_aws_bot_bot",
 	"dockerComposeFile": "../local.yml",
 	"service": "app",
 	"workspaceFolder": "/app",
