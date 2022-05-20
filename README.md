@@ -42,9 +42,9 @@ def start_query(update: Update, context: CallbackContext):
     update.effective_message.edit_text(text=Template(START_TEXT).substitute(name=user_model["complete_name"]))
 ```
 
-2. Next step is to register the command in the **configure** method in the file `app/webhook.py`
+2. Next step is to register the command in the **configure** method in the file `app/config.py`
 ```
-def configure(dispatcher):
+def configure_handlers(dispatcher):
     dispatcher.add_handler(CommandHandler(command="start", callback=start_command))
 ```
 
