@@ -37,24 +37,9 @@ plugins:
   - serverless-python-requirements
 
 functions:
-  register_webhook:
-    handler: app/register_webhook.main
-    events:
-     - httpApi:
-         path: /register_webhook
-         method: get
-  error_testing:
-    handler: app/error_testing.main
-    events:
-     - httpApi:
-         path: /error_testing
-         method: get
-  webhook:
-    handler: app/webhook.main
-    events:
-     - httpApi:
-         path: /webhook
-         method: post
+  main:
+    handler: app/main.main
+    url: true
 
 resources:
   Resources:

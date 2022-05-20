@@ -1,9 +1,8 @@
 import os
 from telegram.ext import Updater, ContextTypes
 
-from app.register_webhook import configure
+from app.config import configure, configure_handlers
 from app.utils.callback_context import CallbackContext
-from app.webhook import configure as configure_handlers
 
 TELEGRAM_TOKEN = os.environ.get('TELEGRAM_TOKEN')
 

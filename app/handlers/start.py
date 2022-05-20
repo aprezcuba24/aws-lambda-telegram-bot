@@ -5,7 +5,7 @@ from app.utils.callback_context import CallbackContext
 
 
 START_TEXT = """
-Hello "$name"
+Hello "$name"!!
 """
 
 
