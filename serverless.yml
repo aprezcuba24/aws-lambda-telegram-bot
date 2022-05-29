@@ -40,6 +40,13 @@ functions:
   main:
     handler: app/main.main
     url: true
+  reporting:
+    handler: app/reporting.main
+    events:
+     - schedule:
+        enabled: false
+        rate: rate(1 minute)
+        description: This schedule is to calculate the reports and send to a channel.
 
 resources:
   Resources:
