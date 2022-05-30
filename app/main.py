@@ -3,10 +3,10 @@ import os
 from telegram import Update, Bot
 from telegram.ext import ContextTypes
 from queue import Queue
-from telegram.ext import Dispatcher
 
 from app.utils.callback_context import CallbackContext
 from app.config import configure, configure_handlers
+from app.utils.dispatcher import Dispatcher
 
 
 def main(event, context):

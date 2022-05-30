@@ -22,6 +22,7 @@ provider:
     TELEGRAM_TOKEN: ${env:TELEGRAM_TOKEN}
     REGION: us-east-1
     USER_TABLE: ${self:custom.user_table}
+    BOT_NAME: ${self:custom.bot_name}
 
 package:
  patterns:
@@ -32,6 +33,7 @@ custom:
   pythonRequirements:
     dockerizePip: non-linux
   user_table: ${env:stage}_base-aws-bot-bot_users_table
+  bot_name: ${env:stage}_base-aws-bot-bot
 
 plugins:
   - serverless-python-requirements

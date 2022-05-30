@@ -23,7 +23,7 @@ def get_or_create_user(user_id, data):
     Key = {"user_id": user_id}
     item = table.get_item(Key=Key)
     if "Item" in item:
-        return get_user_model(item["Item"])
+        return (get_user_model(item["Item"]), False)
     now = datetime.now().isoformat()
     table.put_item(
         Item={
@@ -31,4 +31,4 @@ def get_or_create_user(user_id, data):
             **{"user_id": user_id, "created_at": now, "updated_at": now},
         }
     )
-    return get_user_model(table.get_item(Key=Key)["Item"])
+    return (get_user_model(table.get_item(Key=Key)["Item"]), True)
