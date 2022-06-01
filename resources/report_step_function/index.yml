@@ -1,0 +1,20 @@
+reporting:
+  type: EXPRESS
+  events:
+     - schedule:
+        # Enable this to start
+        enabled: false
+        rate: rate(1 minute)
+        description: This schedule is to calculate the reports and send to a channel.
+  definition:
+    StartAt: Parallel
+    States:
+      Parallel:
+        Type: Parallel
+        Next: SendReport
+        Branches: ${file(./resources/report_step_function/branches.js)}
+      SendReport:
+        Type: Task
+        Resource:
+          Fn::GetAtt: [send_report, Arn]
+        End: true
