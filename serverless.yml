@@ -18,10 +18,23 @@ provider:
           - dynamodb:DeleteItem
         Resource:
           'Fn::GetAtt': ['UsersTable', 'Arn']
+      - Effect: Allow
+        Action:
+          - logs:*
+        Resource:
+          - 'Fn::Join':
+            - ':'
+            -
+              - 'arn:aws:logs'
+              - Ref: 'AWS::Region'
+              - Ref: 'AWS::AccountId'
+              - '*'
   environment:
     TELEGRAM_TOKEN: ${env:TELEGRAM_TOKEN}
     REGION: us-east-1
     USER_TABLE: ${self:custom.user_table}
+    BOT_NAME: ${self:custom.bot_name}
+    MAIN_LOG_GROUP: /aws/lambda/base-aws-bot-bot-${env:stage}-main
 
 package:
  patterns:
@@ -32,14 +45,24 @@ custom:
   pythonRequirements:
     dockerizePip: non-linux
   user_table: ${env:stage}_base-aws-bot-bot_users_table
+  bot_name: ${env:stage}_base-aws-bot-bot
 
 plugins:
   - serverless-python-requirements
+  - serverless-step-functions
 
 functions:
   main:
     handler: app/main.main
     url: true
+  calculate_report_data:
+    handler: app/reporting.calculate_data
+  send_report:
+    handler: app/reporting.main
+
+stepFunctions:
+  stateMachines:
+    ${file(resources/report_step_function/index.yml)}
 
 resources:
   Resources:
