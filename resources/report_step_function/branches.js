@@ -1,6 +1,6 @@
 QUERIES = {
-  public_actions: 'filter (is_group=1) | stats count(*) as calls',
-  private_actions: 'filter (is_group=0) | stats count(*) as calls',
+  public_actions: 'filter (is_private=0) | stats count(*) as calls',
+  private_actions: 'filter (is_private=1) | stats count(*) as calls',
   new_user: 'filter (is_new_user=1) | stats count(*) as calls',
 }
 
