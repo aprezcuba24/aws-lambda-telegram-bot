@@ -1,0 +1,26 @@
+UsersTable:
+  Type: AWS::DynamoDB::Table
+  Properties:
+    TableName: ${self:custom.user_table}
+    AttributeDefinitions:
+      - AttributeName: user_id
+        AttributeType: S
+    KeySchema:
+      - AttributeName: user_id
+        KeyType: HASH
+    ProvisionedThroughput:
+      ReadCapacityUnits: 1
+      WriteCapacityUnits: 1
+PersistenceTable:
+  Type: AWS::DynamoDB::Table
+  Properties:
+    TableName: ${self:custom.bot_data_table}
+    AttributeDefinitions:
+      - AttributeName: persistence_id
+        AttributeType: S
+    KeySchema:
+      - AttributeName: persistence_id
+        KeyType: HASH
+    ProvisionedThroughput:
+      ReadCapacityUnits: 1
+      WriteCapacityUnits: 1

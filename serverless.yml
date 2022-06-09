@@ -17,7 +17,8 @@ provider:
           - dynamodb:UpdateItem
           - dynamodb:DeleteItem
         Resource:
-          'Fn::GetAtt': ['UsersTable', 'Arn']
+          - { 'Fn::GetAtt': ['UsersTable', 'Arn']}
+          - { 'Fn::GetAtt': ['PersistenceTable', 'Arn']}
       - Effect: Allow
         Action:
           - logs:*
@@ -45,6 +46,7 @@ custom:
   pythonRequirements:
     dockerizePip: non-linux
   user_table: ${env:stage}_base-aws-bot-bot_users_table
+  bot_data_table: ${env:stage}_base-aws-bot-bot_persistence_data_table
   bot_name: ${env:stage}_base-aws-bot-bot
 
 plugins:
@@ -66,16 +68,4 @@ stepFunctions:
 
 resources:
   Resources:
-    UsersTable:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        TableName: ${self:custom.user_table}
-        AttributeDefinitions:
-          - AttributeName: user_id
-            AttributeType: S
-        KeySchema:
-          - AttributeName: user_id
-            KeyType: HASH
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
+    ${file(resources/dynamodb.yml)}

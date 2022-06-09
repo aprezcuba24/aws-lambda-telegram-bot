@@ -7,6 +7,7 @@ from queue import Queue
 from app.utils.callback_context import CallbackContext
 from app.config import configure, configure_handlers
 from app.utils.dispatcher import Dispatcher
+from app.utils.persistence import DynamodbPersistence
 
 
 def main(event, context):
@@ -31,7 +32,12 @@ def not_found(event, *args):
 def webhook(event, bot: Bot):
     data = json.loads(event["body"])
     update = Update.de_json(data, bot)
-    dispatcher = Dispatcher(bot=bot, update_queue=Queue(), context_types=ContextTypes(context=CallbackContext))
+    dispatcher = Dispatcher(
+        bot=bot,
+        update_queue=Queue(),
+        context_types=ContextTypes(context=CallbackContext),
+        persistence=DynamodbPersistence()
+    )
     configure_handlers(dispatcher)
     dispatcher.process_update(update=update)
     return {
