@@ -39,4 +39,8 @@ RUN pip3 install virtualenv
 
 RUN curl -sL https://deb.nodesource.com/setup_18.x | sudo -E bash - && sudo apt-get install -y nodejs
 
-WORKDIR /workspace
+WORKDIR /app
+
+COPY requirements.txt .
+COPY requirements/ requirements/
+RUN pip install --no-cache-dir -r requirements.txt

@@ -34,6 +34,7 @@ provider:
     TELEGRAM_TOKEN: ${env:TELEGRAM_TOKEN}
     REGION: us-east-1
     USER_TABLE: ${self:custom.user_table}
+    PERSISTENCE_TABLE: ${self:custom.bot_data_table}
     BOT_NAME: ${self:custom.bot_name}
     MAIN_LOG_GROUP: /aws/lambda/base-aws-bot-bot-${env:stage}-main
 

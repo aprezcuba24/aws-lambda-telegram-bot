@@ -1,15 +1,14 @@
 import json
 import os
-import boto3
 from collections import defaultdict
 from copy import deepcopy
 from typing import Any, DefaultDict, Dict, Optional, Tuple
 
 from telegram.ext import BasePersistence
 
+from app.utils.dynamodb import get_dynamodb_resource
 
-region = os.environ.get("REGION")
-dynamodb = boto3.resource("dynamodb", region_name=region)
+dynamodb = get_dynamodb_resource()
 PERSISTENCE_TABLE = os.environ.get("PERSISTENCE_TABLE")
 RECORD_ID="THE_ONLY_ID_RECORD"
 

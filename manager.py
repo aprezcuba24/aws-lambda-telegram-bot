@@ -1,5 +1,14 @@
 import os
+from pathlib import Path
+
 from telegram.ext import Updater, ContextTypes
+
+try:
+    from dotenv import load_dotenv
+
+    load_dotenv(dotenv_path=Path(__file__).resolve().parent / ".envs" / ".local" / ".app")
+except ImportError:
+    pass
 
 from app.config import configure, configure_handlers
 from app.utils.callback_context import CallbackContext

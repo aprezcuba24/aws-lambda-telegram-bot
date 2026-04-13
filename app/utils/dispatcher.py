@@ -1,14 +1,35 @@
 from telegram.ext import Dispatcher as BaseDispatcher
-from aws_embedded_metrics import metric_scope, MetricsLogger
 
-from app.utils.metrics import create_metrics
+from app.utils.dynamodb import is_local_dynamo_dev
+from app.utils.metrics import NoopMetricsLogger, create_metrics
+
+try:
+    from aws_embedded_metrics import MetricsLogger, metric_scope
+
+    _HAS_EMBEDDED_METRICS = True
+except ImportError:
+    MetricsLogger = object  # type: ignore[misc,assignment]
+    metric_scope = None  # type: ignore[assignment]
+    _HAS_EMBEDDED_METRICS = False
 
 
 class Dispatcher(BaseDispatcher):
     metrics: MetricsLogger
 
-    @metric_scope
-    def process_update(self, update: object, metrics: MetricsLogger) -> None:
-        self.metrics = metrics
-        create_metrics(update, metrics)
-        super().process_update(update)
+    def process_update(self, update: object) -> None:
+        if not _HAS_EMBEDDED_METRICS or is_local_dynamo_dev():
+            self.metrics = NoopMetricsLogger()
+            create_metrics(update, self.metrics)
+            super().process_update(update)
+            return
+        self._process_update_with_metrics(update)
+
+
+def _process_update_with_metrics_impl(self: Dispatcher, update: object, metrics: MetricsLogger) -> None:
+    self.metrics = metrics
+    create_metrics(update, metrics)
+    super(Dispatcher, self).process_update(update)
+
+
+if _HAS_EMBEDDED_METRICS and metric_scope is not None:
+    Dispatcher._process_update_with_metrics = metric_scope(_process_update_with_metrics_impl)  # type: ignore[method-assign]

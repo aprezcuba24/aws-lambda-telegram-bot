@@ -1,13 +1,14 @@
+from typing import Any
+
 from telegram import Update
 from telegram.ext import CallbackContext as BaseCallbackContext, Dispatcher
 
 from app.models.user import get_or_create_user
-from aws_embedded_metrics import MetricsLogger
 
 
 class CallbackContext(BaseCallbackContext):
     _update: Update
-    metrics: MetricsLogger
+    metrics: Any
 
     @classmethod
     def from_update(cls, update: Update, dispatcher: Dispatcher) -> "CallbackContext":
