@@ -1,0 +1,24 @@
+# Copy to .app (same directory): cp .envs/.local/.app.example .envs/.local/.app
+# Used by Docker Compose (local.yml) and optional load_dotenv in manager.py / scripts.
+#
+# Docker Compose env_file: una variable por línea en forma KEY=value. No uses ";"
+# al inicio de línea (falla el parser). Valores con espacios: comillas "like this".
+
+# Required: token from @BotFather
+TELEGRAM_TOKEN=
+
+# Match serverless custom naming with stage=local
+REGION=us-east-1
+USER_TABLE=local_base-aws-bot-bot_users_table
+PERSISTENCE_TABLE=local_base-aws-bot-bot_persistence_data_table
+BOT_NAME=local_base-aws-bot-bot
+
+# DynamoDB Local (from inside the app container use the service hostname)
+DYNAMODB_ENDPOINT=http://dynamodb-local:8000
+
+# Dummy credentials for boto3 against DynamoDB Local (not sent to AWS)
+AWS_ACCESS_KEY_ID=dummy
+AWS_SECRET_ACCESS_KEY=dummy
+
+# Optional: skip embedded metrics even without DYNAMODB_ENDPOINT (e.g. host runs)
+# LOCAL_DEV=true

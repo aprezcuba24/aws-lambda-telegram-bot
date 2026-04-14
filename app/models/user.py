@@ -1,10 +1,9 @@
 import os
-import boto3
 from datetime import datetime
 
+from app.utils.dynamodb import get_dynamodb_resource
 
-region = os.environ.get("REGION")
-dynamodb = boto3.resource("dynamodb", region_name=region)
+dynamodb = get_dynamodb_resource()
 USER_TABLE = os.environ.get("USER_TABLE")
 
 
