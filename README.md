@@ -92,3 +92,8 @@ Docker, VS Code, and Serverless Framework
 The project has the file `.devcontainer/devcontainer.json` to execute the application in **VS Code** and build the docker containers.
 
 To work with **Serverless Framework** you need to install the **NPM modules** and then you can use the commands registered in the `package.json`.
+
+Run tests
+```
+python -m pytest
+```
