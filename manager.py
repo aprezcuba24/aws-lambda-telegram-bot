@@ -25,4 +25,5 @@ dp = updater.dispatcher
 configure_handlers(dp)
 configure(dp.bot)
 updater.start_polling()
+print('Service is started')
 updater.idle()
