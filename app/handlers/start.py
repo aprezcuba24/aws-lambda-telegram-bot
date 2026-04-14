@@ -13,9 +13,9 @@ def _content(user_model):
     return dict(text=Template(START_TEXT).substitute(name=user_model["complete_name"]))
 
 
-def start_query(update: Update, context: CallbackContext):
-    update.effective_message.edit_text(**_content(context.user_db))
+async def start_query(update: Update, context: CallbackContext):
+    await update.effective_message.edit_text(**_content(context.user_db(update)))
 
 
-def start_command(update: Update, context: CallbackContext):
-    update.effective_message.reply_text(**_content(context.user_db))
+async def start_command(update: Update, context: CallbackContext):
+    await update.effective_message.reply_text(**_content(context.user_db(update)))

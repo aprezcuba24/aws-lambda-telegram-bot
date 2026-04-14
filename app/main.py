@@ -1,18 +1,19 @@
+import asyncio
 import json
 import os
-from telegram import Update, Bot
-from telegram.ext import ContextTypes
-from queue import Queue
 
+from telegram import Bot, Update
+from telegram.ext import Application, ContextTypes
+
+from app.config import configure
 from app.utils.callback_context import CallbackContext
-from app.config import configure, configure_handlers
-from app.utils.dispatcher import Dispatcher
+from app.utils.dispatcher import MetricsApplication
 from app.utils.persistence import DynamodbPersistence
 
 
 def main(event, context):
     print(event)
-    TELEGRAM_TOKEN = os.environ.get('TELEGRAM_TOKEN')
+    TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
     bot = Bot(token=TELEGRAM_TOKEN)
     routes = {
         "/webhook": webhook,
@@ -29,33 +30,40 @@ def not_found(event, *args):
     }
 
 
+async def _webhook_async(bot: Bot, update_payload: dict) -> None:
+    application = (
+        Application.builder()
+        .application_class(MetricsApplication)
+        .bot(bot)
+        .persistence(DynamodbPersistence())
+        .context_types(ContextTypes(context=CallbackContext))
+        .build()
+    )
+    await application.initialize()
+    update = Update.de_json(update_payload, bot)
+    await application.process_update(update)
+    await application.shutdown()
+
+
 def webhook(event, bot: Bot):
     data = json.loads(event["body"])
-    update = Update.de_json(data, bot)
-    dispatcher = Dispatcher(
-        bot=bot,
-        update_queue=Queue(),
-        context_types=ContextTypes(context=CallbackContext),
-        persistence=DynamodbPersistence()
-    )
-    configure_handlers(dispatcher)
-    dispatcher.process_update(update=update)
+    asyncio.run(_webhook_async(bot, data))
     return {
         "statusCode": 200,
-        "body": "ok"
+        "body": "ok",
     }
 
 
 def register_bot(event, bot: Bot):
     url = f"https://{event['requestContext']['domainName']}/webhook"
-    bot.setWebhook(url)
+    bot.set_webhook(url=url)
     body = {
         "webhook_url": url,
         "bot": bot.get_me().to_dict(),
-        "input": event
+        "input": event,
     }
     configure(bot)
     return {
         "statusCode": 200,
-        "body": json.dumps(body)
+        "body": json.dumps(body),
     }

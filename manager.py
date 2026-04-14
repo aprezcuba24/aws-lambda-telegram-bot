@@ -1,7 +1,8 @@
 import os
 from pathlib import Path
+import asyncio
 
-from telegram.ext import Updater, ContextTypes
+from telegram.ext import Application, ContextTypes
 
 try:
     from dotenv import load_dotenv
@@ -12,18 +13,22 @@ except ImportError:
 
 from app.config import configure, configure_handlers
 from app.utils.callback_context import CallbackContext
+from app.utils.dispatcher import MetricsApplication
 from app.utils.persistence import DynamodbPersistence
 
-TELEGRAM_TOKEN = os.environ.get('TELEGRAM_TOKEN')
+TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
 
-updater = Updater(
-    TELEGRAM_TOKEN,
-    context_types=ContextTypes(context=CallbackContext),
-    persistence=DynamodbPersistence()
+application = (
+    Application.builder()
+    .application_class(MetricsApplication)
+    .token(TELEGRAM_TOKEN)
+    .persistence(DynamodbPersistence())
+    .context_types(ContextTypes(context=CallbackContext))
+    .build()
 )
-dp = updater.dispatcher
-configure_handlers(dp)
-configure(dp.bot)
-updater.start_polling()
-print('Service is started')
-updater.idle()
+loop = asyncio.get_event_loop()
+loop.create_task(configure(application.bot))
+
+configure_handlers(application)
+print("Service is started")
+application.run_polling()

@@ -2,7 +2,7 @@ import os
 from typing import Any
 
 from telegram import Update
-from telegram.ext import Filters
+from telegram.ext import filters
 
 try:
     from aws_embedded_metrics import MetricsLogger
@@ -32,9 +32,10 @@ def create_metrics(update: Update, metrics: Any) -> None:
         metrics.set_property("is_inline_query", 1)
         metrics.set_property("inline_query", update.inline_query.query)
     else:
-        metrics.set_property("is_command", Filters.command(update))
-        metrics.set_property("is_private", Filters.chat_type.private(update))
-        metrics.set_property("text", update.effective_message.text)
+        metrics.set_property("is_command", bool(filters.COMMAND.check_update(update)))
+        metrics.set_property("is_private", bool(filters.ChatType.PRIVATE.check_update(update)))
+        msg = update.effective_message
+        metrics.set_property("text", msg.text if msg else None)
     metrics.set_property("user_id", update.effective_user.id)
     metrics.set_property("user_name", update.effective_user.name)
     metrics.set_property("is_bot", update.effective_user.is_bot)
